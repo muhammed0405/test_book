@@ -32,7 +32,7 @@ const ResendVerificationEmail = () => {
 				</p>
 				<ol className="text-white list-decimal list-inside mb-4">
 					<li>Электрондук почта дарегиңизди төмөндөгү талаага жазыңыз.</li>
-					<li>"Кайра жөнөтүү" баскычын басыңыз.</li>
+					<li>&quot Кайра жөнөтүү &quot баскычын басыңыз.</li>
 					<li>Электрондук почтаңызды текшериңиз.</li>
 					<li>Келген катта көрсөтүлгөн нускамаларды аткарыңыз.</li>
 				</ol>
@@ -80,7 +80,7 @@ const ResendVerificationEmail = () => {
 	)
 }
 
-const InputField = ({ label, id, type, placeholder, value, onChange }) => (
+const InputField = (label, id, type, placeholder, value, onChange) => (
 	<div className="flex flex-col gap-2 text-white font-semibold">
 		<label htmlFor={id}>{label}</label>
 		<input

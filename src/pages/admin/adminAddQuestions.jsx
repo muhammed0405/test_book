@@ -74,7 +74,7 @@ export default function AdminPanel() {
 
 			<form
 				onSubmit={handleSubmit}
-				className="mb-8 bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
+				className=" bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4"
 			>
 				<div className="mb-4">
 					<label

@@ -9,7 +9,7 @@ import { MdOutlinePassword } from "react-icons/md"
 import { Bounce, toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 
-const InputField = ({ label, id, type, placeholder, register }) => (
+const InputField = (label, id, type, placeholder, register) => (
 	<div className="flex flex-col gap-2 text-white font-semibold">
 		<label htmlFor={id}>{label}</label>
 		<input
