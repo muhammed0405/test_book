@@ -1,8 +1,7 @@
 /** @format */
 
-import { Navigate, Outlet } from "react-router-dom"
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated"
-
+import { Navigate, Outlet } from "react-router-dom"
 const ProtectedAuthRoute = () => {
 	const isAuthenticated = useIsAuthenticated()
 
