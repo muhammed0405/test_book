@@ -1,23 +1,29 @@
 /** @format */
 
-import { useEffect, useRef } from "react"
+import React, { useEffect, useRef } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { getResults } from "../../redux/features/question/questionSlice"
+import {
+	getAccess,
+	getResults,
+} from "../../redux/features/question/questionSlice"
 import useAuthUser from "react-auth-kit/hooks/useAuthUser"
+
 export default function Results() {
 	const dispatch = useDispatch()
-	const results = useSelector(state => state.questions.results)
+	const { results, loading, isAccess, resultShowingTime } = useSelector(
+		state => state.questions
+	)
 	const auth = useAuthUser()
 
 	const fetchOnce = useRef(false)
+
 	useEffect(() => {
 		if (!fetchOnce.current) {
 			dispatch(getResults({ student_id: auth.userId }))
-		}
-		return () => {
+			dispatch(getAccess())
 			fetchOnce.current = true
 		}
-	}, [])
+	}, [dispatch, auth.userId])
 
 	const correctAnswers =
 		results.items?.filter(result => result.isCorrect).length || 0
@@ -26,6 +32,26 @@ export default function Results() {
 	const correctPercentage =
 		totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0
 
+	if (loading) {
+		return (
+			<div className="flex items-center justify-center h-screen bg-gray-100">
+				<p className="text-xl text-center p-4 bg-white shadow rounded">
+					Жүктөлүүдө...
+				</p>
+			</div>
+		)
+	}
+
+	if (!isAccess) {
+		return (
+			<div className="flex items-center justify-center h-screen bg-gray-100">
+				<p className="text-xl text-center p-4 bg-white shadow rounded">
+					Жыйынтыктар саат {resultShowingTime?.slice(10, 16)}  көрсөтүлөт. Кайра
+					кайрылыңыз.
+				</p>
+			</div>
+		)
+	}
 	return (
 		<div className="container mx-auto p-4  min-h-screen">
 			<h1 className="text-3xl font-bold mb-8 text-center text-gray-800">

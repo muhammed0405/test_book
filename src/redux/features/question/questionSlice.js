@@ -105,12 +105,45 @@ export const addQuestion = createAsyncThunk(
 	}
 )
 
+export const getAccess = createAsyncThunk("questions/getAccess", async () => {
+	try {
+		const response = await axiosInstance.get(
+			"/api/collections/isAdminGaveAcces/records/vwyp7szt8vbrw90"
+		)
+		console.log(response)
+		return response.data
+	} catch (error) {
+		console.error(error)
+		throw error
+	}
+})
+
+export const toggleAccess = createAsyncThunk(
+	"questions/toggleAccess",
+	async isAccess => {
+		try {
+			const response = await axiosInstance.patch(
+				"/api/collections/isAdminGaveAcces/records/vwyp7szt8vbrw90",
+				{
+					isIt: !isAccess,
+				}
+			)
+
+			return !isAccess
+		} catch (error) {
+			console.error("Error toggling access:", error)
+		}
+	}
+)
+
 export const initialState = {
 	questions: [],
 	loading: false,
 	error: "",
 	results: [],
 	allResults: [],
+	isAccess: false,
+	resultShowingTime: "",
 }
 const questionSlice = createSlice({
 	name: "questions", // Change this to 'questions' for clarity
@@ -120,6 +153,8 @@ const questionSlice = createSlice({
 		error: null,
 		results: [],
 		allResults: [],
+		isAccess: false,
+		resultShowingTime: "",
 	},
 	reducers: {},
 	extraReducers: builder => {
@@ -159,6 +194,19 @@ const questionSlice = createSlice({
 			.addCase(getAllResults.rejected, (state, action) => {
 				state.loading = false
 				state.error = action.payload
+			})
+			.addCase(getAccess.pending, state => {
+				state.loading = true
+				state.error = null
+			})
+			.addCase(getAccess.fulfilled, (state, action) => {
+				state.loading = false
+				state.isAccess = action.payload.isIt
+				state.resultShowingTime = action.payload.time
+			})
+			.addCase(toggleAccess.fulfilled, (state, action) => {
+				state.loading = false
+				state.isAccess = action.payload
 			})
 	},
 })

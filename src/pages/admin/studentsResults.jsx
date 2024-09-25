@@ -4,8 +4,11 @@ import { useEffect, useRef, useState } from "react"
 import { IoPerson } from "react-icons/io5"
 import { RxLapTimer } from "react-icons/rx"
 import { useDispatch, useSelector } from "react-redux"
-import axiosInstance from "../../redux/features/auth/axiosAuthUtils"
-import { getAllResults } from "../../redux/features/question/questionSlice"
+import {
+	getAccess,
+	getAllResults,
+	toggleAccess,
+} from "../../redux/features/question/questionSlice"
 import {
 	formatTime,
 	groupResultsByStudent,
@@ -14,7 +17,9 @@ import {
 
 const StudentsResults = () => {
 	const dispatch = useDispatch()
-	const { allResults, loading, error } = useSelector(state => state.questions)
+	const { allResults, loading, error, isAccess } = useSelector(
+		state => state.questions
+	)
 	const [sortedResults, setSortedResults] = useState([])
 	const [sortBy, setSortBy] = useState("name")
 
@@ -35,33 +40,20 @@ const StudentsResults = () => {
 	useEffect(() => {
 		if (!runOnce.current) {
 			dispatch(getAllResults())
+			dispatch(getAccess())
 			runOnce.current = true
 		}
-	}, [])
+	}, [dispatch])
 
-	const gaveAccess = async ({ access }) => {
-		try {
-			const response = await axiosInstance.patch(
-				"/api/collections/isAdminGaveAcces/records/vwyp7szt8vbrw90",
-				{
-					isIt: access,
-				}
-			)
-
-			localStorage.setItem("isAccess", access.toString())
-
-			console.log("response", response)
-		} catch (error) {
-			console.error(error)
-		}
+	const handleToggleAccess = () => {
+		dispatch(toggleAccess(isAccess))
 	}
-
-	const isAccess = localStorage.getItem("isAccess") === "true"
 
 	if (loading) return <div className="text-center py-4">Жүктөлүүдө...</div>
 	if (error)
 		return <div className="text-center py-4 text-red-600">Ката: {error}</div>
 
+	console.log("isAccess", isAccess)
 	return (
 		<div className="container mx-auto px-4 py-8">
 			<h2 className="text-3xl font-bold mb-6 text-center text-gray-800">
@@ -71,32 +63,37 @@ const StudentsResults = () => {
 				<button
 					onClick={() => handleSort("name")}
 					className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded"
+					title="Аты боюнча иреттөө"
 				>
-					Аты ⬇️
+					👤⬇️
 				</button>
 				<button
 					onClick={() => handleSort("time")}
 					className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-4 rounded"
+					title="Убакыт боюнча иреттөө"
 				>
-					Убакыт ⬇️
+					⏱️⬇️
 				</button>
 				<button
 					onClick={() => handleSort("correct")}
-					className="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded"
+					className="bg-green-800 hover:bg-green-900 text-white font-bold py-2 px-4 rounded"
+					title="Туура жооптор боюнча иреттөө"
 				>
-					Туура ⬇️
+					✅⬇️
 				</button>
 				<button
 					onClick={() => handleSort("wrong")}
-					className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+					className="bg-red-800 hover:bg-red-900 text-white font-bold py-2 px-4 rounded"
+					title="Ката жооптор боюнча иреттөө"
 				>
-					Ката ⬇️
+					❌⬇️
 				</button>
 				<button
-					onClick={() => gaveAccess({ access: !isAccess })}
-					className="bg-purple-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded"
+					onClick={handleToggleAccess}
+					className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded"
+					title={isAccess ? "Жыйынтыкты жашыруу" : "Жыйынтыкты көрсөтүү"}
 				>
-					{isAccess ? "Жыйынтыкты жашыруу " : "Жыйынтыкты көрсөтүү"}
+					{isAccess ? "🙈" : "👀"}
 				</button>
 			</div>
 			{sortedResults.length > 0 ? (

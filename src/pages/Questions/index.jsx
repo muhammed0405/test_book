@@ -1,6 +1,6 @@
 /** @format */
 
-import { useEffect, useRef, useState, useCallback } from "react"
+import React, { useEffect, useRef, useState, useCallback } from "react"
 import useAuthUser from "react-auth-kit/hooks/useAuthUser"
 import { useDispatch, useSelector } from "react-redux"
 import {
@@ -19,21 +19,24 @@ export default function Dashboard() {
 	const { timeLeft, startTimer, stopTimer, resetTimer } = useTimer(60)
 	const [isFinished, setIsFinished] = useState(false)
 	const fetchOnce = useRef(false)
-	const [isCorrect, setIsCorrect] = useState(false)
 
 	useEffect(() => {
 		const savedQuestionNumber = localStorage.getItem("questionNumber")
-		setIsFinished(localStorage.getItem("isFinished"))
+		const savedIsFinished = localStorage.getItem("isFinished")
 
 		if (savedQuestionNumber) {
-			setQuestionNumber(parseInt(savedQuestionNumber))
+			setQuestionNumber(parseInt(savedQuestionNumber, 10))
+		}
+
+		if (savedIsFinished === "true") {
+			setIsFinished(true)
 		}
 
 		if (!fetchOnce.current && !isFinished) {
 			dispatch(getQuestions())
 			fetchOnce.current = true
 		}
-	}, [])
+	}, [dispatch, isFinished])
 
 	useEffect(() => {
 		if (questions.length > 0 && !isFinished) {
@@ -42,27 +45,10 @@ export default function Dashboard() {
 	}, [questions, questionNumber, startTimer, isFinished])
 
 	useEffect(() => {
-		if (timeLeft === 0) {
-			const currentQuestion = questions[questionNumber - 1]
-			const isCorrect =
-				currentQuestion?.answer === currentQuestion[selectedAnswer]
-
-			setTimeout(() => {
-				dispatch(
-					submitAnswer({
-						student_id: auth?.userId,
-						questionId: currentQuestion.id,
-						answer: selectedAnswer,
-						isCorrect: isCorrect,
-						timeSpent: 60 - timeLeft,
-						question: currentQuestion,
-						student_name: auth?.student_name,
-					})
-				)
-			}, 2000)
+		if (timeLeft === 0 && questions.length > 0 && !isFinished) {
 			handleNextQuestion()
 		}
-	}, [timeLeft])
+	}, [timeLeft, questions, isFinished])
 
 	const handleAnswerSelect = useCallback(answer => {
 		setSelectedAnswer(answer)
@@ -71,19 +57,20 @@ export default function Dashboard() {
 	const checkAnswer = useCallback(
 		answer => {
 			const currentQuestion = questions[questionNumber - 1]
-			const isCorrect = currentQuestion.answer === currentQuestion[answer]
-			setIsCorrect(isCorrect)
-			dispatch(
-				submitAnswer({
-					student_id: auth?.userId,
-					questionId: currentQuestion.id,
-					answer: answer,
-					isCorrect: isCorrect,
-					timeSpent: 60 - timeLeft,
-					question: currentQuestion,
-					student_name: auth?.student_name,
-				})
-			)
+			if (currentQuestion) {
+				const isCorrect = currentQuestion.answer === currentQuestion[answer]
+				dispatch(
+					submitAnswer({
+						student_id: auth?.userId,
+						questionId: currentQuestion.id,
+						answer: answer,
+						isCorrect: isCorrect,
+						timeSpent: 60 - timeLeft,
+						question: currentQuestion,
+						student_name: auth?.student_name,
+					})
+				)
+			}
 		},
 		[auth, dispatch, questionNumber, questions, timeLeft]
 	)
@@ -102,7 +89,7 @@ export default function Dashboard() {
 		} else {
 			stopTimer()
 			localStorage.setItem("isFinished", "true")
-			localStorage.setItem("questionNumber", "0")
+			localStorage.setItem("questionNumber", "1")
 			setIsFinished(true)
 		}
 	}, [
@@ -114,7 +101,7 @@ export default function Dashboard() {
 		stopTimer,
 	])
 
-	if (isFinished)
+	if (isFinished) {
 		return (
 			<div className="flex items-center justify-center h-screen bg-gray-100">
 				<p className="text-xl text-center p-4 bg-white shadow rounded">
@@ -122,29 +109,40 @@ export default function Dashboard() {
 				</p>
 			</div>
 		)
+	}
 
-	if (loading)
+	if (loading) {
 		return (
 			<div className="flex items-center justify-center h-screen bg-gray-100">
 				<p className="text-xl">Жүктөлүүдө...</p>
 			</div>
 		)
+	}
 
-	if (error)
+	if (error) {
 		return (
 			<div className="flex items-center justify-center h-screen bg-gray-100">
-				<p className="text-xl text-red-500">Ката : {error}</p>
+				<p className="text-xl text-red-500">Ката: {error}</p>
 			</div>
 		)
+	}
 
-	if (questions.length === 0)
+	if (questions.length === 0) {
 		return (
 			<div className="flex items-center justify-center h-screen bg-gray-100">
-				<p className="text-xl">No questions available.</p>
+				<p className="text-xl">Суроолор жок.</p>
 			</div>
 		)
+	}
 
 	const currentQuestion = questions[questionNumber - 1]
+	if (!currentQuestion) {
+		return (
+			<div className="flex items-center justify-center h-screen bg-gray-100">
+				<p className="text-xl">Суроо жүктөлүүдө...</p>
+			</div>
+		)
+	}
 
 	return (
 		<div className="max-w-4xl mx-auto p-4 bg-gray-100 min-h-screen">
@@ -162,7 +160,7 @@ export default function Dashboard() {
 						timeLeft <= 10 ? "text-red-500" : ""
 					} font-semibold`}
 				>
-					Калган убакыт : {timeLeft} cекунд
+					Калган убакыт: {timeLeft} секунд
 				</p>
 			</div>
 
