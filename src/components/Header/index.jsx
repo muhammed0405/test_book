@@ -35,7 +35,7 @@ export default function Header() {
 
 	useEffect(() => {
 		const handleResize = () => {
-			if (window.innerwidth >= 768) {
+			if (window.innerwidth >= 1028) {
 				setMenuOpen(false)
 			}
 		}
@@ -51,12 +51,13 @@ export default function Header() {
 		}
 	}, [menuOpen])
 
-	const NavButton = ({ to, onClick, children }) => (
+	const NavButton = ({ to, onClick, children, title }) => (
 		<motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
 			<NavLink to={to} onClick={onClick}>
 				<button
 					className="w-full md:w-auto py-2 px-4 border-2 h-10 rounded-md text-start transition-colors hover:bg-opacity-10 hover:bg-primary"
 					style={buttonStyle}
+					title={title}
 				>
 					{children}
 				</button>
@@ -69,24 +70,17 @@ export default function Header() {
 		const buttons = isAuthenticated
 			? auth.role === "admin"
 				? [
-						{ to: "/admin", icon: "🛠️ Жыйынтыктар " },
-						{ to: "/adminPanel", icon: "📘 Суроо кошуу" },
-						{ to: "/all_results", icon: "📊 Жалпы жыйынтык" },
+						{ to: "/admin", icon: "🛠️", title: "Жыйынтыктар" },
+						{ to: "/adminPanel", icon: "📘", title: "Суроо кошуу" },
+						{ to: "/all_results", icon: "📊", title: "Жалпы жыйынтык" },
 				  ]
 				: [
-						{
-							to: "/dashboard",
-							icon: (
-								<div className="flex items-center gap-2">
-									<FaList /> Суроолор
-								</div>
-							),
-						},
-						{ to: "/results", text: "✅ Жооптор" },
+						{ to: "/dashboard", icon: "📝", title: "Суроолор" },
+						{ to: "/results", icon: "✅", title: "Жооптор" },
 				  ]
 			: [
-					{ to: "/login", text: <RiLoginBoxLine />, icon: "Кирүү" },
-					{ to: "/register", text: "Каттоо" },
+					{ to: "/login", icon: "🔑", title: "Кирүү" },
+					{ to: "/register", icon: "📝", title: "Каттоо" },
 			  ]
 
 		return (
@@ -98,8 +92,8 @@ export default function Header() {
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ delay: index * 0.1 }}
 					>
-						<NavButton to={button.to} onClick={closeMenu}>
-							{button.icon || button.text}
+						<NavButton to={button.to} onClick={closeMenu} title={button.title}>
+							{button.icon}
 						</NavButton>
 					</motion.div>
 				))}
@@ -108,19 +102,29 @@ export default function Header() {
 						initial={{ opacity: 0, y: -20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ delay: buttons.length * 0.1 }}
+						style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
 					>
 						<button
 							innerwidth={isMobile ? "100%" : "auto"}
-							className="w-full md:w-auto py-2 px-4 border-2 h-10 rounded-md text-center transition-colors hover:bg-opacity-10 hover:bg-primary flex  justify-start  items-center gap-2"
+							className="w-full md:w-auto py-2 px-4 border-2 h-10 rounded-md text-center transition-colors hover:bg-opacity-10 hover:bg-primary flex justify-start items-center gap-2"
 							style={buttonStyle}
 							onClick={() => {
 								setLogOut(!logOut)
 								closeMenu()
 							}}
+							title="Чыгуу"
 						>
-							<PiSignOutBold />
-							Чыгуу
+							🚪
 						</button>
+						<a
+							href="/auth/request/reset_password"
+							innerwidth={isMobile ? "100%" : "auto"}
+							className="w-full md:w-auto py-2 px-4 border-2 h-10 rounded-md text-center transition-colors hover:bg-opacity-10 hover:bg-primary flex justify-start items-center gap-2"
+							style={buttonStyle}
+							title="Сыр сөздү өзгөртүү"
+						>
+							🔒
+						</a>
 					</motion.div>
 				)}
 			</>
@@ -142,8 +146,9 @@ export default function Header() {
 							style={buttonStyle}
 							whileHover={{ scale: 1.1 }}
 							whileTap={{ scale: 0.9 }}
+							title="Башкы бет"
 						>
-							<MdHome />
+							🏠
 						</motion.button>
 					</NavLink>
 					<motion.button
