@@ -1,6 +1,5 @@
 /** @format */
 
-import React from "react"
 import { useParams, useNavigate } from "react-router-dom"
 import { useDispatch } from "react-redux"
 import { verifyEmail } from "../../../redux/features/auth/authSlice"
