@@ -44,11 +44,11 @@ const App = () => {
 						<Route path="/add_questions" element={<AdminAddQuestions />} />
 					</Route>
 
-					<Route element={<ProtectedAuthRoute redirectPath="/" />}>
-						<Route path="/login" element={<Login />} />
+					<Route element={<ProtectedAuthRoute />}>
 						<Route path="/register" element={<Register />} />
 						<Route path="/forgot-password" element={<ForgotPassword />} />
 						<Route path="/verify-email/:token" element={<VerifyEmail />} />
+						<Route path="/login" element={<Login />} />
 						<Route
 							path="/request/verification"
 							element={<ResendVerificationEmail />}

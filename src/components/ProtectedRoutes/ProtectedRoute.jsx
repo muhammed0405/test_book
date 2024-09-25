@@ -3,10 +3,12 @@
 import { Navigate, Outlet } from "react-router-dom"
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated"
 
-const ProtectedAuthRoute = (redirectPath = "/") => {
+const ProtectedAuthRoute = () => {
 	const isAuthenticated = useIsAuthenticated()
 
-	return isAuthenticated ? <Navigate to={redirectPath} /> : <Outlet />
+	console.log("isAuthenticated", isAuthenticated)
+
+	return isAuthenticated ? <Navigate to={"/"} /> : <Outlet />
 }
 
 export default ProtectedAuthRoute

@@ -23,17 +23,13 @@ export default function Dashboard() {
 
 	useEffect(() => {
 		const savedQuestionNumber = localStorage.getItem("questionNumber")
-		const savedIsFinished = localStorage.getItem("isFinished")
+		setIsFinished(localStorage.getItem("isFinished"))
 
 		if (savedQuestionNumber) {
 			setQuestionNumber(parseInt(savedQuestionNumber))
 		}
 
-		if (savedIsFinished === "true") {
-			setIsFinished(true)
-		}
-
-		if (!fetchOnce.current && !isFinished && questions.length === 0) {
+		if (!fetchOnce.current && !isFinished) {
 			dispatch(getQuestions())
 			fetchOnce.current = true
 		}
@@ -105,9 +101,8 @@ export default function Dashboard() {
 			resetTimer()
 		} else {
 			stopTimer()
-			alert("Тест бүттү!")
 			localStorage.setItem("isFinished", "true")
-			localStorage.setItem("questionNumber", "1")
+			localStorage.setItem("questionNumber", "0")
 			setIsFinished(true)
 		}
 	}, [
@@ -123,7 +118,7 @@ export default function Dashboard() {
 		return (
 			<div className="flex items-center justify-center h-screen bg-gray-100">
 				<p className="text-xl text-center p-4 bg-white shadow rounded">
-					Тестти тапшыргансыз кийинки окуучуга орун бериңиз!
+					Тестти ийгилүктүү тапшырдыңыз. Жыйынтыкты күтүңүз.
 				</p>
 			</div>
 		)
