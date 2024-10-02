@@ -20,21 +20,30 @@ export const getQuestions = createAsyncThunk(
 )
 
 export const getAllResults = createAsyncThunk(
-	"questions/getALLResults",
-	async () => {
+	"questions/getAllResults",
+	async (_, { rejectWithValue }) => {
 		try {
 			const response = await axiosInstance.get(
-				"/api/collections/results/records"
+				"/api/collections/results/records",
+				{
+					params: {
+						page: 1,
+						perPage: 10000, // Adjust this number based on your maximum expected records
+						sort: "-created", // Optional: sort by creation date, newest first
+					},
+				}
 			)
-			console.log(response.data) // Check the structure of the response
-			return response.data // Ensure this is the correct path to the items
+
+			console.log("Total items:", response.data.totalItems)
+			console.log("Items:", response.data.items)
+
+			return response.data // Return just the items array
 		} catch (error) {
-			console.log(error)
-			throw error // Throw the error to be caught in the rejected case
+			console.error("Error fetching results:", error)
+			return rejectWithValue(error.response?.data || "An error occurred")
 		}
 	}
 )
-
 export const submitAnswer = createAsyncThunk(
 	"questions/submitAnswer",
 	async ({

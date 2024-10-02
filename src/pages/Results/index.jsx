@@ -1,36 +1,39 @@
 /** @format */
 
-import React, { useEffect, useRef } from "react"
+import { useEffect, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import {
-	getAccess,
-	getResults,
-} from "../../redux/features/question/questionSlice"
+import { getAccess } from "../../redux/features/question/questionSlice"
 import useAuthUser from "react-auth-kit/hooks/useAuthUser"
+import PocketBase from "pocketbase"
 
 export default function Results() {
 	const dispatch = useDispatch()
-	const { results, loading, isAccess, resultShowingTime } = useSelector(
+	const { loading, isAccess, resultShowingTime } = useSelector(
 		state => state.questions
 	)
 	const auth = useAuthUser()
-
-	const fetchOnce = useRef(false)
+	const [results, setResults] = useState(null)
 
 	useEffect(() => {
-		if (!fetchOnce.current) {
-			dispatch(getResults({ student_id: auth.userId }))
-			dispatch(getAccess())
-			fetchOnce.current = true
-		}
-	}, [dispatch, auth.userId])
+		dispatch(getAccess())
 
-	const correctAnswers =
-		results.items?.filter(result => result.isCorrect).length || 0
-	const totalQuestions = results.items?.length || 0
-	const incorrectAnswers = totalQuestions - correctAnswers
-	const correctPercentage =
-		totalQuestions > 0 ? (correctAnswers / totalQuestions) * 100 : 0
+		const fetchResults = async () => {
+			try {
+				const pb = new PocketBase("https://tasbih.pockethost.io")
+				const records = await pb.collection("results3").getList(1, 50, {
+					filter: `student_id="${auth.userId}"`,
+				})
+
+				if (records.items.length > 0) {
+					setResults(records.items[0].oneStudentJsonResult)
+				}
+			} catch (error) {
+				console.error("Error fetching results:", error)
+			}
+		}
+
+		fetchResults()
+	}, [dispatch, auth.userId])
 
 	if (loading) {
 		return (
@@ -46,14 +49,30 @@ export default function Results() {
 		return (
 			<div className="flex items-center justify-center h-screen bg-gray-100">
 				<p className="text-xl text-center p-4 bg-white shadow rounded">
-					Жыйынтыктар саат {resultShowingTime?.slice(10, 16)}  көрсөтүлөт. Кайра
+					Жыйынтыктар саат {resultShowingTime?.slice(10, 16)} көрсөтүлөт. Кайра
 					кайрылыңыз.
 				</p>
 			</div>
 		)
 	}
+
+	if (!results) {
+		return (
+			<div className="flex items-center justify-center h-screen bg-gray-100">
+				<p className="text-xl text-center p-4 bg-white shadow rounded">
+					Жыйынтыктар табылган жок, же тест тапшыра элексиз
+				</p>
+			</div>
+		)
+	}
+
+	const { result, resultOfOneStudent } = results
+	const { correctAnswers, wrong_answers, total_time_spent } = result
+	const totalQuestions = resultOfOneStudent.length
+	const correctPercentage = (correctAnswers / totalQuestions) * 100
+
 	return (
-		<div className="container mx-auto p-4  min-h-screen">
+		<div className="container mx-auto p-4 min-h-screen">
 			<h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
 				Сиздин тесттин жыйынтыгы
 			</h1>
@@ -105,9 +124,14 @@ export default function Results() {
 							</div>
 							<div className="bg-red-100 p-4 rounded-lg flex-1 ml-2">
 								<div className="text-3xl font-bold text-red-600">
-									{incorrectAnswers}
+									{wrong_answers}
 								</div>
 								<div className="text-sm text-red-800">Ката</div>
+							</div>
+						</div>
+						<div className="mt-4 text-center">
+							<div className="text-lg font-semibold text-gray-700">
+								Жалпы убакыт: {total_time_spent} секунд
 							</div>
 						</div>
 					</div>
@@ -119,13 +143,15 @@ export default function Results() {
 							Толук маалымат
 						</h2>
 						<div className="space-y-6 max-h-[calc(100vh-300px)] overflow-y-auto pr-4">
-							{results.items?.map((result, idx) => (
+							{resultOfOneStudent.map((result, idx) => (
 								<div
 									key={idx}
 									className={`p-6 rounded-xl ${
-										result.isCorrect ? "bg-green-50" : "bg-red-50"
+										result.is_answer_correct ? "bg-green-50" : "bg-red-50"
 									} border-2 ${
-										result.isCorrect ? "border-green-200" : "border-red-200"
+										result.is_answer_correct
+											? "border-green-200"
+											: "border-red-200"
 									}`}
 								>
 									<p className="font-semibold text-lg mb-4 text-gray-800">
@@ -136,7 +162,7 @@ export default function Results() {
 											<div
 												key={option}
 												className={`p-4 rounded-lg transition-all duration-200 ${
-													result.answer === option
+													result.choosen_answer === result.question[option]
 														? "bg-blue-200 border-blue-500"
 														: result.question.answer === result.question[option]
 														? "bg-green-100 border-green-500"
@@ -147,7 +173,7 @@ export default function Results() {
 													{option.toUpperCase()})
 												</span>
 												{result.question[option]}
-												{result.answer === option && (
+												{result.choosen_answer === result.question[option] && (
 													<span className="ml-2 font-semibold text-blue-700">
 														← Сиздин жооп
 													</span>
@@ -159,6 +185,9 @@ export default function Results() {
 												)}
 											</div>
 										))}
+									</div>
+									<div className="mt-4 text-right text-gray-600">
+										Убакыт: {result.time_spent} секунд
 									</div>
 								</div>
 							))}

@@ -22,7 +22,7 @@ const AllStudentsResultsShow = () => {
 	const searchInputRef = useRef(null)
 	const [isAdminGaveAccess, setIsAdminGaveAccess] = useState(false)
 	const [timeOfResults, setTimeOfResults] = useState("")
-
+	console.log("allResults", allResults)
 	useEffect(() => {
 		dispatch(getAllResults())
 	}, [dispatch])

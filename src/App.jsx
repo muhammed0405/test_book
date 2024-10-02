@@ -10,23 +10,16 @@ import Register from "./pages/Auth/Register"
 import ResetPassword from "./pages/Auth/ResetPassword"
 import VerifyEmail from "./pages/Auth/VerifyEmail"
 import Home from "./pages/Home"
-import Dashboard from "./pages/Questions"
 import Results from "./pages/Results"
 import StudentsResults from "./pages/admin/studentsResults"
 import AllStudentsResultsShow from "./pages/AllStudentsResultShow/AllStudentsResultShow"
 import ResendVerificationEmail from "./pages/Auth/RequestVerificationEmail"
 import AdminAddQuestions from "./pages/admin/adminAddQuestions"
 import AdminPanel from "./pages/admin/adminAddQuestions"
+import Questions from "./pages/Questions"
 // import { refresh } from "./components/RefreshToken"
 // import createStore from "react-auth-kit/createStore"
 const App = () => {
-	// const store = createStore({
-	// 	authName: "_auth",
-	// 	authType: "cookie",
-	// 	cookieDomain: window.location.hostname,
-	// 	cookieSecure: window.location.protocol === "https:",
-	// 	refresh: refresh,
-	// })
 	return (
 		<div className="app">
 			<Header />
@@ -35,7 +28,7 @@ const App = () => {
 				<Routes>
 					<Route element={<AuthOutlet fallbackPath="/register" />}>
 						<Route path="/" element={<Home />} />
-						<Route path="/dashboard" element={<Dashboard />} />
+						<Route path="/dashboard" element={<Questions />} />
 						<Route path="/results" element={<Results />} />
 						<Route path="/all_results" element={<AllStudentsResultsShow />} />
 						<Route path="/admin" element={<StudentsResults />} />
