@@ -8,6 +8,7 @@ import { signUp } from "../../../redux/features/auth/authSlice"
 import { MdOutlinePassword } from "react-icons/md"
 import { Bounce, toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
+import { NavLink } from "react-router-dom"
 
 const InputField = ({ label, id, type, placeholder, register }) => (
 	<div className="flex flex-col gap-2 text-white font-semibold">
@@ -125,6 +126,26 @@ const Register = () => {
 					Каттоо
 				</button>
 			</form>
+
+			<NavLink to="/login">
+				<button
+					className="
+				bg-blue-300
+				py-2
+				px-4
+				w-36
+				text-white
+				font-semibold
+				text-xl
+				border-none
+				mt-[25px]
+				rounded-md
+				text-center
+				"
+				>
+					Кирүү
+				</button>
+			</NavLink>
 			<ToastContainer
 				position="top-right"
 				autoClose={5000}

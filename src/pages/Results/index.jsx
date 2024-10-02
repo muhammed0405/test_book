@@ -72,7 +72,7 @@ export default function Results() {
 	const correctPercentage = (correctAnswers / totalQuestions) * 100
 
 	return (
-		<div className="container mx-auto p-4 min-h-screen">
+		<div className="container mx-auto  min-h-screen">
 			<h1 className="text-3xl font-bold mb-8 text-center text-gray-800">
 				Сиздин тесттин жыйынтыгы
 			</h1>
@@ -138,15 +138,15 @@ export default function Results() {
 				</div>
 
 				<div className="lg:col-span-2">
-					<div className="bg-white p-6 rounded-xl shadow-lg">
+					<div className="bg-white p-2 rounded-xl shadow-lg">
 						<h2 className="text-2xl font-semibold mb-6 text-center text-gray-700">
 							Толук маалымат
 						</h2>
-						<div className="space-y-6 max-h-[calc(100vh-300px)] overflow-y-auto pr-4">
+						<div className="space-y-6 max-h-[calc(100vh-300px)] overflow-y-auto pr-2">
 							{resultOfOneStudent.map((result, idx) => (
 								<div
 									key={idx}
-									className={`p-6 rounded-xl ${
+									className={`p-2 rounded-xl ${
 										result.is_answer_correct ? "bg-green-50" : "bg-red-50"
 									} border-2 ${
 										result.is_answer_correct
@@ -161,12 +161,12 @@ export default function Results() {
 										{["a", "b", "c", "d"].map(option => (
 											<div
 												key={option}
-												className={`p-4 rounded-lg transition-all duration-200 ${
+												className={`p-2 rounded-lg transition-all duration-200 ${
 													result.choosen_answer === result.question[option]
 														? "bg-blue-200 border-blue-500"
 														: result.question.answer === result.question[option]
 														? "bg-green-100 border-green-500"
-														: "bg-gray-100 border-gray-300"
+														: "bg-white border-gray-300"
 												} border-2`}
 											>
 												<span className="font-bold mr-2">

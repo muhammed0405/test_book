@@ -61,14 +61,14 @@ export default function Login() {
 				onSubmit={handleSubmit(onSubmit)}
 			>
 				<div className="flex flex-col gap-2 text-white font-semibold">
-					<label htmlFor="email">Логин</label>
+					<label htmlFor="email">Логин же Google аккаунтуңуз</label>
 					<input
 						required
 						{...register("email", { required: true })}
 						className="authInputs text-blue-500 p-2 rounded-sm"
 						type="text"
 						id="email"
-						placeholder="Электрондук почтаңызды жазыңыз"
+						placeholder="Логин же Google аккаунтуңузду жазыңыз"
 					/>
 				</div>
 
@@ -98,6 +98,25 @@ export default function Login() {
 					Кирүү
 				</button>
 			</form>
+			<NavLink to="/register">
+				<button
+					className="
+				bg-blue-300
+				py-2
+				px-4
+				w-36
+				text-white
+				font-semibold
+				text-xl
+				border-none
+				mt-[25px]
+				rounded-md
+				text-center
+				"
+				>
+					Каттоо
+				</button>
+			</NavLink>
 			<NavLink to="/auth/request/reset_password">
 				Сыр сөздү унутуп калдыңызбы?
 			</NavLink>

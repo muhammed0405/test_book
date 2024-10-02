@@ -6,23 +6,17 @@ import { RxLapTimer } from "react-icons/rx"
 import { useDispatch, useSelector } from "react-redux"
 import axiosInstance from "../../redux/features/auth/axiosAuthUtils"
 import { getAllResults } from "../../redux/features/question/questionSlice"
-import {
-	formatTime,
-	groupResultsByStudent,
-	sortResultsByCorrectAnswersAndTime,
-	sortStudentResults,
-} from "../admin/studentsResultsFunc"
+import FormattedTime from "../../components/FomattedTime"
 
 const AllStudentsResultsShow = () => {
 	const dispatch = useDispatch()
 	const { allResults, loading, error } = useSelector(state => state.questions)
 	const [sortedResults, setSortedResults] = useState([])
-	const [sortBy, setSortBy] = useState("correctAndTime")
 	const [searchTerm, setSearchTerm] = useState("")
 	const searchInputRef = useRef(null)
 	const [isAdminGaveAccess, setIsAdminGaveAccess] = useState(false)
 	const [timeOfResults, setTimeOfResults] = useState("")
-	console.log("allResults", allResults)
+
 	useEffect(() => {
 		dispatch(getAllResults())
 	}, [dispatch])
@@ -33,7 +27,6 @@ const AllStudentsResultsShow = () => {
 				const response = await axiosInstance.get(
 					"/api/collections/isAdminGaveAcces/records"
 				)
-
 				setIsAdminGaveAccess(response.data.items[0].isIt)
 				setTimeOfResults(response.data.items[0].time)
 			} catch (error) {
@@ -45,24 +38,28 @@ const AllStudentsResultsShow = () => {
 
 	useEffect(() => {
 		if (allResults.items?.length > 0) {
-			let sorted
-			if (sortBy === "correctAndTime") {
-				sorted = sortResultsByCorrectAnswersAndTime(allResults.items)
-			} else {
-				const groupedResults = groupResultsByStudent(allResults.items)
-				sorted = sortStudentResults(groupedResults, sortBy)
-			}
+			const sorted = allResults.items
+				.map(item => ({
+					...item.oneStudentJsonResult.result,
+					student_id: item.student_id,
+					student_name:
+						item.oneStudentJsonResult.resultOfOneStudent[0].student_name ||
+						"Unknown",
+				}))
+				.sort((a, b) => {
+					if (b.correctAnswers !== a.correctAnswers) {
+						return b.correctAnswers - a.correctAnswers
+					}
+					return a.total_time_spent - b.total_time_spent
+				})
 			setSortedResults(sorted)
 		}
-	}, [allResults.items, sortBy])
-
-	const handleSort = criteria => {
-		setSortBy(criteria)
-	}
+	}, [allResults.items])
 
 	const handleSearch = e => {
 		setSearchTerm(e.target.value)
 	}
+	
 
 	const handleKeyDown = e => {
 		if (e.key === "Enter") {
@@ -85,14 +82,25 @@ const AllStudentsResultsShow = () => {
 			}
 		}
 	}
-
-	if (loading) return <div className="text-center py-4">Жүктөлүүдө...</div>
-	if (!isAdminGaveAccess)
+	if (loading) {
 		return (
-			<div className="text-center py-4">
-				Жыйынтык чыга элек саат {timeOfResults.slice(11, 16)} дө кириңиз
+			<div className="flex items-center justify-center h-screen bg-gray-100">
+				<p className="text-xl text-center p-4 bg-white shadow rounded">
+					Жүктөлүүдө...
+				</p>
 			</div>
 		)
+	}
+	if (!isAdminGaveAccess) {
+		return (
+			<div className="flex items-center justify-center h-screen bg-gray-100">
+				<p className="text-xl text-center p-4 bg-white shadow rounded">
+					Жыйынтыктар саат {timeOfResults?.slice(10, 16)} көрсөтүлөт. Кайра
+					кайрылыңыз.
+				</p>
+			</div>
+		)
+	}
 	if (error)
 		return <div className="text-center py-4 text-red-600">Ката: {error}</div>
 
@@ -123,11 +131,13 @@ const AllStudentsResultsShow = () => {
 							className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300"
 						>
 							<div className="flex items-center justify-between mb-4">
-								<strong className="text-[14px] sm:text-lg md:text-xl text-gray-800 flex items-center gap-2">
-									{index + 1}. <IoPerson />: {studentResult.student_name}
+								<strong className="text-lg text-gray-800 flex items-center gap-2">
+									{index + 1}. <IoPerson className="text-blue-500" />{" "}
+									{studentResult.student_name}
 								</strong>
 								<span className="text-sm text-gray-500 flex items-center gap-2">
-									<RxLapTimer />: {formatTime(studentResult.totalTime)}
+									<RxLapTimer className="text-blue-500" />{" "}
+									<FormattedTime studentResult={studentResult} />
 								</span>
 							</div>
 							<div className="flex justify-between items-center">
@@ -139,19 +149,19 @@ const AllStudentsResultsShow = () => {
 								</div>
 								<div className="flex items-center">
 									<span className="text-red-500 font-bold mr-2">
-										{studentResult.wrongAnswers}
+										{studentResult.wrong_answers}
 									</span>
 									<span className="text-sm text-gray-600">Ката жооптор</span>
 								</div>
 							</div>
-							<div className="mt-4 bg-gray-200 rounded-full h-2">
+							<div className="mt-4 bg-red-400 rounded-full h-2">
 								<div
 									className="bg-green-500 h-2 rounded-full"
 									style={{
 										width: `${
 											(studentResult.correctAnswers /
 												(studentResult.correctAnswers +
-													studentResult.wrongAnswers)) *
+													studentResult.wrong_answers)) *
 											100
 										}%`,
 									}}

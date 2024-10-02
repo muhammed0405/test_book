@@ -1,24 +1,22 @@
 /** @format */
 
-// src/utils/resultUtils.js
+export const groupResultsByStudent = items => {
+	return items.reduce((acc, item) => {
+		const result = item.oneStudentJsonResult.result
+		const studentId = item.student_id
 
-export const groupResultsByStudent = results => {
-	return results.reduce((acc, result) => {
-		if (!acc[result.student_id]) {
-			acc[result.student_id] = {
-				student_id: result.student_id,
-				correctAnswers: 0,
-				wrongAnswers: 0,
-				totalTime: 0,
-				results: [],
-				student_name: result.student_name,
+		if (!acc[studentId]) {
+			acc[studentId] = {
+				student_id: studentId,
+				correctAnswers: result.correctAnswers,
+				wrongAnswers: result.wrong_answers,
+				totalTime: result.total_time_spent,
+				results: item.oneStudentJsonResult.resultOfOneStudent,
+				student_name:
+					item.oneStudentJsonResult.resultOfOneStudent[0].student_name ||
+					"Unknown",
 			}
 		}
-
-		acc[result.student_id].correctAnswers += result.isCorrect ? 1 : 0
-		acc[result.student_id].wrongAnswers += result.isCorrect ? 0 : 1
-		acc[result.student_id].totalTime += result.time
-		acc[result.student_id].results.push(result)
 
 		return acc
 	}, {})
@@ -34,7 +32,7 @@ export const sortStudentResults = (studentResults, sortBy) => {
 	return Object.values(studentResults).sort((a, b) => {
 		switch (sortBy) {
 			case "name":
-				return a.student_id.localeCompare(b.student_id)
+				return a.student_name.localeCompare(b.student_name)
 			case "time":
 				return a.totalTime - b.totalTime
 			case "correct":
@@ -46,11 +44,19 @@ export const sortStudentResults = (studentResults, sortBy) => {
 		}
 	})
 }
-export const sortResultsByCorrectAnswersAndTime = results => {
-	return Object.values(groupResultsByStudent(results)).sort((a, b) => {
+
+export const sortResultsByCorrectAnswersAndTime = items => {
+	const groupedResults = groupResultsByStudent(items)
+	return Object.values(groupedResults).sort((a, b) => {
 		if (b.correctAnswers !== a.correctAnswers) {
 			return b.correctAnswers - a.correctAnswers
 		}
 		return a.totalTime - b.totalTime
 	})
+}
+
+export const toggleAccess = currentAccessState => {
+	// This function would typically interact with your backend to toggle access
+	// For now, we'll just return the opposite of the current state
+	return !currentAccessState
 }

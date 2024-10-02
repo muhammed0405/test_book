@@ -4,13 +4,14 @@ import { useNavigate } from "react-router-dom"
 
 // Warm color palette
 const colors = {
-	primary: "#e67e22", // Orange
+	primary: "#6CB4EE", // Blue
 	secondary: "#f39c12", // Amber
 	accent: "#d35400", // Dark Orange
 	text: "#34495e", // Dark Blue-Gray
 	background: "#fff", // White
 	danger: "#c0392b", // Dark Red
-	success: "#27ae60", // Green
+	success: "#ADFF2F", // Green
+	warning: "#FFAC1C", // Orange
 }
 
 export default function AskToLogOut({ setLogOut, signOut }) {
@@ -30,6 +31,7 @@ export default function AskToLogOut({ setLogOut, signOut }) {
 						color: colors.danger,
 						borderColor: colors.danger,
 						borderWidth: 4,
+						fontWeight: "bold",
 					}}
 					onClick={() => {
 						try {
@@ -46,9 +48,10 @@ export default function AskToLogOut({ setLogOut, signOut }) {
 				<button
 					className="p-3 rounded-lg"
 					style={{
-						color: colors.success,
-						borderColor: colors.success,
+						color: colors.warning,
+						borderColor: colors.warning,
 						borderWidth: 4,
+						fontWeight: "bold",
 					}}
 					onClick={() => setLogOut(false)}
 				>

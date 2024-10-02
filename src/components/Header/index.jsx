@@ -4,14 +4,9 @@ import { useState, useEffect } from "react"
 import useAuthUser from "react-auth-kit/hooks/useAuthUser"
 import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated"
 import useSignOut from "react-auth-kit/hooks/useSignOut"
-import { FaList } from "react-icons/fa"
-import { MdHome } from "react-icons/md"
-import { PiSignOutBold } from "react-icons/pi"
 import { NavLink } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import AskToLogOut from "./AskToLogOut"
-import { RiLoginBoxLine } from "react-icons/ri"
-
 const colors = {
 	primary: "#e67e22",
 	secondary: "#f39c12",
@@ -72,11 +67,20 @@ export default function Header() {
 				? [
 						{ to: "/admin", icon: "🛠️ админ", title: "Жыйынтыктар" },
 						{ to: "/adminPanel", icon: "📘суроо кошуу", title: "Суроо кошуу" },
-						{ to: "/all_results", icon: "📊 жыйынтыктар", title: "Жалпы жыйынтык" },
+						{
+							to: "/all_results",
+							icon: "📊 жыйынтыктар",
+							title: "жалпы жыйынтык",
+						},
 				  ]
 				: [
 						{ to: "/dashboard", icon: "📝 суроолор", title: "Суроолор" },
-						{ to: "/results", icon: "✅ жооптор", title: "Жооптор" },
+						{ to: "/results", icon: "✅ жооптор", title: "жооптор" },
+						{
+							to: "/all_results",
+							icon: "📊 жалпы жыйынтык",
+							title: "жалпы жыйынтык",
+						},
 				  ]
 			: [
 					{ to: "/login", icon: "🔑 кирүү", title: "Кирүү" },
@@ -102,10 +106,14 @@ export default function Header() {
 						initial={{ opacity: 0, y: -20 }}
 						animate={{ opacity: 1, y: 0 }}
 						transition={{ delay: buttons.length * 0.1 }}
-						style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+						style={{
+							display: "flex",
+							flexDirection: isMobile ? "column" : "row ",
+							alignItems: "center",
+							gap: "0.5rem",
+						}}
 					>
 						<button
-							innerwidth={isMobile ? "100%" : "auto"}
 							className="w-full md:w-auto py-2 px-4 border-2 h-10 rounded-md text-center transition-colors hover:bg-opacity-10 hover:bg-primary flex justify-start items-center gap-2"
 							style={buttonStyle}
 							onClick={() => {
@@ -118,12 +126,11 @@ export default function Header() {
 						</button>
 						<a
 							href="/auth/request/reset_password"
-							innerwidth={isMobile ? "100%" : "auto"}
 							className="w-full md:w-auto py-2 px-4 border-2 h-10 rounded-md text-center transition-colors hover:bg-opacity-10 hover:bg-primary flex justify-start items-center gap-2"
 							style={buttonStyle}
 							title="Сыр сөздү өзгөртүү"
 						>
-							🔒Сыр сөздү өзгөртүү
+							🔒cыр сөздү өзгөртүү
 						</a>
 					</motion.div>
 				)}
