@@ -71,8 +71,8 @@ export default function Header() {
 			? auth.role === "admin"
 				? [
 						{ to: "/admin", icon: "🛠️", title: "Жыйынтыктар" },
-						{ to: "/adminPanel", icon: "📘", title: "Суроо кошуу" },
-						{ to: "/all_results", icon: "📊", title: "Жалпы жыйынтык" },
+						{ to: "/adminPanel", icon: "📘суроо кошуу", title: "Суроо кошуу" },
+						{ to: "/all_results", icon: "📊жыйнтыктар", title: "Жалпы жыйынтык" },
 				  ]
 				: [
 						{ to: "/dashboard", icon: "📝", title: "Суроолор" },
