@@ -5,6 +5,7 @@ import { useSelector, useDispatch } from "react-redux"
 import PocketBase from "pocketbase"
 import useAuthUser from "react-auth-kit/hooks/useAuthUser"
 import { Link } from "react-router-dom"
+import { getQuestions } from "../redux/features/question/questionSlice"
 
 const Questions = () => {
 	const questions = useSelector(state => state.questions.questions)
@@ -95,6 +96,10 @@ const Questions = () => {
 			finishQuiz()
 		}
 	}
+
+	useEffect(() => {
+		dispatch(getQuestions())
+	}, [])
 
 	const finishQuiz = async () => {
 		if (!answers[currentQuestionIndex]) {
