@@ -70,17 +70,17 @@ export default function Header() {
 		const buttons = isAuthenticated
 			? auth.role === "admin"
 				? [
-						{ to: "/admin", icon: "🛠️", title: "Жыйынтыктар" },
+						{ to: "/admin", icon: "🛠️ админ", title: "Жыйынтыктар" },
 						{ to: "/adminPanel", icon: "📘суроо кошуу", title: "Суроо кошуу" },
-						{ to: "/all_results", icon: "📊жыйнтыктар", title: "Жалпы жыйынтык" },
+						{ to: "/all_results", icon: "📊 жыйынтыктар", title: "Жалпы жыйынтык" },
 				  ]
 				: [
-						{ to: "/dashboard", icon: "📝", title: "Суроолор" },
-						{ to: "/results", icon: "✅", title: "Жооптор" },
+						{ to: "/dashboard", icon: "📝 суроолор", title: "Суроолор" },
+						{ to: "/results", icon: "✅ жооптор", title: "Жооптор" },
 				  ]
 			: [
-					{ to: "/login", icon: "🔑", title: "Кирүү" },
-					{ to: "/register", icon: "📝", title: "Каттоо" },
+					{ to: "/login", icon: "🔑 кирүү", title: "Кирүү" },
+					{ to: "/register", icon: "📝 каттоо ", title: "Каттоо" },
 			  ]
 
 		return (
@@ -114,7 +114,7 @@ export default function Header() {
 							}}
 							title="Чыгуу"
 						>
-							🚪
+							🚪аккаунтан чыгуу
 						</button>
 						<a
 							href="/auth/request/reset_password"
@@ -123,7 +123,7 @@ export default function Header() {
 							style={buttonStyle}
 							title="Сыр сөздү өзгөртүү"
 						>
-							🔒
+							🔒Сыр сөздү өзгөртүү
 						</a>
 					</motion.div>
 				)}
