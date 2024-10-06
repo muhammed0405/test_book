@@ -100,7 +100,13 @@ const StudentsResults = () => {
 	}, [dispatch])
 
 	const handleToggleAccess = () => {
-		dispatch(toggleAccess(isAccess))
+		if (window.confirm(isAccess ? "Жыйынтыкты жашырууга макулсузбу?" : "Жыйынтыкты көрсөтүүгө макулсузбу?")) {
+			try {
+				dispatch(toggleAccess(isAccess))
+			} catch (error) {
+				alert("Ката чыкты кайра аракет кылыңыз", error)
+			}
+		}
 	}
 
 	if (loading) return <div className="text-center py-4">Жүктөлүүдө...</div>
@@ -146,7 +152,7 @@ const StudentsResults = () => {
 					className="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded"
 					title={isAccess ? "Жыйынтыкты жашыруу" : "Жыйынтыкты көрсөтүү"}
 				>
-					{isAccess ? "🙈" : "👀"}
+					{isAccess ? "🙈 жыйынтыкты жашыруу" : "👀 жыйынтыкты көрсөтү"}
 				</button>
 			</div>
 			{sortedResults.length > 0 ? (

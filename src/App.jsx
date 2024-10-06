@@ -44,9 +44,9 @@ const App = () => {
 						element={<ForgotPassword />}
 					/>
 
+					<Route path="/" element={<Home />} />
 					{/* Protected routes for authenticated users */}
 					<Route element={<AuthOutlet fallbackPath="/login" />}>
-						<Route path="/" element={<Home />} />
 						<Route path="/dashboard" element={<Questions />} />
 						<Route path="/results" element={<Results />} />
 						<Route path="/all_results" element={<AllStudentsResultsShow />} />
