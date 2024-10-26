@@ -8,18 +8,24 @@ export default function Home() {
       </h1>
 
       {/* Audio book button */}
-      <div className="mb-6 text-center">
-        <a 
-          href="https://www.youtube.com/results?search_query=%D0%BC%D0%B0%D1%80%D0%BA%D1%83%D0%BC%D0%B4%D0%B0%D1%80+%D1%83%D0%BD%D1%83" 
-          target="_blank" 
-          rel="noopener noreferrer" 
-          className="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
-        >
-          <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
-          </svg>
-          Китепти угуу
-        </a>
+      <div className="mb-6 flex justify-center">
+        <div className="bg-white p-4 rounded-lg shadow-md text-center">
+          <p className="mb-4 text-gray-600">Китепти угуу үчүн төмөнкү баскычты басыңыз:</p>
+          <a 
+            href="https://www.youtube.com/results?search_query=%D0%BC%D0%B0%D1%80%D0%BA%D1%83%D0%BC%D0%B4%D0%B0%D1%80+%D1%83%D0%BD%D1%83" 
+            target="_blank" 
+            rel="noopener noreferrer" 
+            className="inline-flex items-center px-6 py-3 bg-green-600 hover:bg-green-700 text-white font-medium rounded-lg transition-colors"
+          >
+            <svg className="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z"></path>
+            </svg>
+            Китепти угуу
+          </a>
+          <p className="mt-2 text-sm text-gray-500">
+            (Жаңы вкладкада ачылат)
+          </p>
+        </div>
       </div>
 
       <div className="bg-white p-4 rounded-md mb-6">
