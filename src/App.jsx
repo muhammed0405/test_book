@@ -19,6 +19,7 @@ import ResendVerificationEmail from "./pages/Auth/RequestVerificationEmail"
 import AdminAddQuestions from "./pages/admin/adminAddQuestions"
 import AdminPanel from "./pages/admin/adminAddQuestions"
 import Questions from "./pages/Questions"
+import UserList from './pages/admin/user_list'
 
 const App = () => {
 	return (
@@ -57,6 +58,8 @@ const App = () => {
 						<Route path="/admin" element={<StudentsResults />} />
 						<Route path="/adminPanel" element={<AdminPanel />} />
 						<Route path="/add_questions" element={<AdminAddQuestions />} />
+						<Route path="/user_list" element={<UserList />} />
+
 					</Route>
 				</Routes>
 			</div>
