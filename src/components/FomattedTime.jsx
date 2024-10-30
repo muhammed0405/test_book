@@ -1,5 +1,5 @@
 /** @format */
-
+import PropTypes from "prop-types"
 const FormattedTime = ({ studentResult }) => {
 	const convertSecondsToMinutesAndSeconds = totalSeconds => {
 		const minutes = Math.floor(totalSeconds / 60)
@@ -14,3 +14,7 @@ const FormattedTime = ({ studentResult }) => {
 }
 
 export default FormattedTime
+
+FormattedTime.propTypes = {
+	studentResult: PropTypes.object.isRequired,
+}

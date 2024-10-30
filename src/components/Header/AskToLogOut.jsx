@@ -1,6 +1,7 @@
 /** @format */
 
 import { useNavigate } from "react-router-dom"
+import PropTypes from "prop-types"
 
 // Warm color palette
 const colors = {
@@ -60,4 +61,9 @@ export default function AskToLogOut({ setLogOut, signOut }) {
 			</div>
 		</div>
 	)
+}
+
+AskToLogOut.propTypes = {
+	setLogOut: PropTypes.func.isRequired,
+	signOut: PropTypes.func.isRequired,
 }

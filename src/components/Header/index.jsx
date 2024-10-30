@@ -7,6 +7,8 @@ import useSignOut from "react-auth-kit/hooks/useSignOut"
 import { NavLink } from "react-router-dom"
 import { motion, AnimatePresence } from "framer-motion"
 import AskToLogOut from "./AskToLogOut"
+import PropTypes from "prop-types"
+
 const colors = {
 	primary: "#e67e22",
 	secondary: "#f39c12",
@@ -60,6 +62,13 @@ export default function Header() {
 		</motion.div>
 	)
 
+	NavButton.propTypes = {
+	to: PropTypes.func.isRequired,
+	onClick: PropTypes.func.isRequired,
+	children: PropTypes.node.isRequired,
+	title: PropTypes.string.isRequired,
+}
+
 	const renderNavButtons = (isMobile = false) => {
 		const closeMenu = isMobile ? () => setMenuOpen(false) : () => {}
 		const buttons = isAuthenticated
@@ -67,7 +76,11 @@ export default function Header() {
 				? [
 						{ to: "/admin", icon: "🛠️ админ", title: "Жыйынтыктар" },
 						{ to: "/adminPanel", icon: "📘суроо кошуу", title: "Суроо кошуу" },
-						{ to: "/user_list", icon: "👤 колдонуучулар", title: "колдонуучулар" },
+						{
+							to: "/user_list",
+							icon: "👤 колдонуучулар",
+							title: "колдонуучулар",
+						},
 						{
 							to: "/all_results",
 							icon: "📊 жыйынтыктар",
@@ -202,3 +215,5 @@ export default function Header() {
 		</motion.header>
 	)
 }
+
+

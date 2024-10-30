@@ -1,6 +1,4 @@
 /** @format */
-
-import React from "react"
 import useAuthUser from "react-auth-kit/hooks/useAuthUser"
 import { Navigate, Outlet } from "react-router-dom"
 
