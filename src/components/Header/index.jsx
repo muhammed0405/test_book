@@ -76,6 +76,7 @@ export default function Header() {
 				? [
 						{ to: "/admin", icon: "🛠️ админ", title: "Жыйынтыктар" },
 						{ to: "/adminPanel", icon: "📘суроо кошуу", title: "Суроо кошуу" },
+						{ to: "/UserVerification", icon: " каттоону тастыктоо", title: "тастыктоо" },
 						{
 							to: "/user_list",
 							icon: "👤 колдонуучулар",
@@ -161,6 +162,16 @@ export default function Header() {
 		>
 			<div className="container mx-auto px-4">
 				<div className="flex justify-between items-center py-4">
+					<NavLink to= "/dashboard"><motion.button
+							className="py-2 px-4 border-2 h-10 rounded-md text-center transition-colors hover:bg-opacity-10 hover:bg-primary"
+							style={buttonStyle}
+							whileHover={{ scale: 1.1 }}
+							whileTap={{ scale: 0.9 }}
+							title="суроолор"
+						>баштоо
+							📝
+						</motion.button>
+					</NavLink>
 					<NavLink to="/">
 						<motion.button
 							className="py-2 px-4 border-2 h-10 rounded-md text-center transition-colors hover:bg-opacity-10 hover:bg-primary"

@@ -21,6 +21,7 @@ import AdminPanel from "./pages/admin/adminAddQuestions"
 import Questions from "./pages/Questions"
 import UserList from './pages/admin/user_list'
 import AllStudentsResultsDelete from './pages/admin/All_delete'
+import UserVerification from './pages/admin/dostup'
 
 const App = () => {
 	return (
@@ -60,6 +61,7 @@ const App = () => {
 						<Route path="/adminPanel" element={<AdminPanel />} />
 						<Route path="/add_questions" element={<AdminAddQuestions />} />
 						<Route path="/user_list" element={<UserList />} />
+						<Route path="/UserVerification" element={<UserVerification/>} />
 						<Route path="/all_results_delete" element={<AllStudentsResultsDelete/>} />
 
 					</Route>
