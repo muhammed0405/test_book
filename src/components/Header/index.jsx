@@ -93,7 +93,7 @@ export default function Header() {
 						},
 				  ]
 				: [
-						{ to: "/dashboard", icon: "📝 суроолор", title: "Суроолор" },
+					
 						{ to: "/results", icon: "✅ жооптор", title: "жооптор" },
 						{
 							to: "/all_results",
@@ -166,7 +166,19 @@ export default function Header() {
 		>
 			<div className="container mx-auto px-4">
 				<div className="flex justify-between items-center py-4">
+				<NavLink to="/">
+						<motion.button
+							className="py-2 px-4 border-2 h-10 rounded-md text-center transition-colors hover:bg-opacity-10 hover:bg-primary"
+							style={buttonStyle}
+							whileHover={{ scale: 1.1 }}
+							whileTap={{ scale: 0.9 }}
+							title="Башкы бет"
+						>
+							🏠
+						</motion.button>
+					</NavLink>
 					{auth?.role !== "admin" && isAuthenticated && (
+						
 						<NavLink to="/dashboard">
 							<motion.button
 								className="py-2 px-4 border-2 h-10 rounded-md text-center transition-colors hover:bg-opacity-10 hover:bg-primary"
@@ -179,17 +191,7 @@ export default function Header() {
 							</motion.button>
 						</NavLink>
 					)}
-					<NavLink to="/">
-						<motion.button
-							className="py-2 px-4 border-2 h-10 rounded-md text-center transition-colors hover:bg-opacity-10 hover:bg-primary"
-							style={buttonStyle}
-							whileHover={{ scale: 1.1 }}
-							whileTap={{ scale: 0.9 }}
-							title="Башкы бет"
-						>
-							🏠
-						</motion.button>
-					</NavLink>
+					
 					<motion.button
 						className="md:hidden z-50 focus:outline-none"
 						onClick={() => setMenuOpen(!menuOpen)}

@@ -192,8 +192,10 @@ const Questions = () => {
 				<div className="bg-white p-8 rounded-lg shadow-lg text-center">
 					<h2 className="text-3xl font-bold text-blue-600 mb-4">Тест бүттү!</h2>
 					<p className="text-xl text-gray-700">
-						Сиздин жыйынтык жөнөтүлдү. Сиз жыйынтыкты кийинчерээк көрө аласыз .
+						Сиздин жыйынтык жөнөтүлдү. Сиз жыйынтыкты кийинчерээк көрө аласыз .жыйтыкты коруу учун  жогорууда ушул баскычты басыныз <span className="" >☰</span>
+
 					</p>
+					
 					<div className="mt-8">
 						<Link to="/">
 							<button className="bg-blue-500 text-white px-6 py-2 rounded-full text-lg hover:bg-blue-600 transition duration-300">
