@@ -1,6 +1,6 @@
 /** @format */
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
 import { useDispatch, useSelector } from "react-redux"
 import { NavLink, useNavigate } from "react-router-dom"
@@ -9,6 +9,7 @@ import { Bounce, toast, ToastContainer } from "react-toastify"
 import "react-toastify/dist/ReactToastify.css"
 import { login } from "../../../redux/features/auth/authSlice"
 import { MdOutlinePassword } from "react-icons/md"
+import useIsAuthenticated from "react-auth-kit/hooks/useIsAuthenticated"
 
 export default function Login() {
 	const signIn = useSignIn()
@@ -17,6 +18,8 @@ export default function Login() {
 	const navigate = useNavigate()
 	const error = useSelector(state => state.auth.error)
 	const [showPassword, setShowPassword] = useState(false)
+	const isAuthenticated = useIsAuthenticated()
+	console.log("isAuthenticated", isAuthenticated)
 
 	const notifyError = text =>
 		toast.error(text, {
@@ -51,6 +54,10 @@ export default function Login() {
 	const handleShowPassword = () => {
 		setShowPassword(!showPassword)
 	}
+
+	useEffect(() => {
+		isAuthenticated && navigate("/")
+	}, [])
 
 	return (
 		<div className="flex flex-col justify-center items-center h-screen gap-4">
