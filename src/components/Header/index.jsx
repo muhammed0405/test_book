@@ -166,7 +166,7 @@ export default function Header() {
 		>
 			<div className="container mx-auto px-4">
 				<div className="flex justify-between items-center py-4">
-					{auth.role !== "admin" && (
+					{auth?.role !== "admin" && isAuthenticated && (
 						<NavLink to="/dashboard">
 							<motion.button
 								className="py-2 px-4 border-2 h-10 rounded-md text-center transition-colors hover:bg-opacity-10 hover:bg-primary"
@@ -175,7 +175,7 @@ export default function Header() {
 								whileTap={{ scale: 0.9 }}
 								title="суроолор"
 							>
-								Баштоо 📝
+								баштоо 📝
 							</motion.button>
 						</NavLink>
 					)}
@@ -226,6 +226,7 @@ export default function Header() {
 					</motion.div>
 				)}
 			</AnimatePresence>
+
 			<AnimatePresence>
 				{logOut && <AskToLogOut setLogOut={setLogOut} signOut={signOut} />}
 			</AnimatePresence>
