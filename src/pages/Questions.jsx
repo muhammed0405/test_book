@@ -13,9 +13,7 @@ const Questions = () => {
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [answers, setAnswers] = useState({})
 	const [timeLeft, setTimeLeft] = useState(60)
-	const [quizFinished, setQuizFinished] = useState(
-		JSON.parse(localStorage.getItem("testId"))?.isFinished
-	)
+	const [quizFinished, setQuizFinished] = useState(false)
 	const [quizResults, setQuizResults] = useState(null)
 	const [questionStartTime, setQuestionStartTime] = useState(Date.now())
 	const [totalTimeSpent, setTotalTimeSpent] = useState(0)
@@ -34,11 +32,13 @@ const Questions = () => {
 	}, [])
 
 	useEffect(() => {
-		if (questions.length > 0) {
+		// Only start timer if questions are loaded and quiz is not finished
+		if (questions.length > 0 && !quizFinished) {
 			const timer = setInterval(() => {
 				setTimeLeft(prevTime => {
 					if (prevTime === 0) {
-						handleTimeOut()
+						// Automatically move to next question when time runs out
+						handleAutoNextQuestion()
 						return 60
 					}
 					return prevTime - 1
@@ -47,7 +47,7 @@ const Questions = () => {
 
 			return () => clearInterval(timer)
 		}
-	}, [currentQuestionIndex, questions])
+	}, [currentQuestionIndex, questions, quizFinished])
 
 	useEffect(() => {
 		if (questions.length > 0) {
@@ -60,6 +60,37 @@ const Questions = () => {
 			localStorage.setItem("quizState", JSON.stringify(stateToSave))
 		}
 	}, [currentQuestionIndex, answers, timeLeft, totalTimeSpent, questions])
+
+	useEffect(() => {
+		// Dispatch questions fetch
+		const questionsPromise = dispatch(getQuestions())
+
+		// Fetch user record
+		const fetchUserById = async () => {
+			try {
+				// Directly use getFirstListItem without assuming .items array
+				const user = await pb
+					.collection("results3")
+					.getFirstListItem(`student_id = "${auth.userId}"`)
+
+				// Check if user record exists
+				const isFinished = !!user
+				setQuizFinished(isFinished)
+				localStorage.setItem("quizFinished", JSON.stringify(isFinished))
+			} catch (error) {
+				// Handle 404 specifically
+				if (error.status === 404) {
+					setQuizFinished(false)
+					localStorage.setItem("quizFinished", JSON.stringify(false))
+				} else {
+					console.error("Error fetching user:", error)
+				}
+			}
+		}
+
+		// Use Promise.all to handle both operations
+		Promise.all([questionsPromise, fetchUserById()])
+	}, [auth.userId])
 
 	const handleAnswer = answer => {
 		const timeSpent = Math.round((Date.now() - questionStartTime) / 1000)
@@ -76,19 +107,17 @@ const Questions = () => {
 		setTotalTimeSpent(prevTotal => prevTotal + timeSpent)
 	}
 
-	const handleTimeOut = () => {
+	const handleAutoNextQuestion = () => {
+		// Automatically move to next question when time runs out
+		// If no answer was given, treat it as a null/incorrect answer
 		if (!answers[currentQuestionIndex]) {
-			handleAnswer(null) // Mark as wrong answer
+			handleAnswer(null)
 		}
-		handleNextQuestion()
+		goToNextQuestion()
 	}
 
-	const handleNextQuestion = () => {
+	const goToNextQuestion = () => {
 		if (currentQuestionIndex < questions.length - 1) {
-			if (!answers[currentQuestionIndex]) {
-				alert("Сураныч суроого жооп бериңиз.")
-				return
-			}
 			setCurrentQuestionIndex(prevIndex => prevIndex + 1)
 			setTimeLeft(60)
 			setQuestionStartTime(Date.now())
@@ -97,9 +126,13 @@ const Questions = () => {
 		}
 	}
 
-	useEffect(() => {
-		dispatch(getQuestions())
-	}, [])
+	const handleNextQuestion = () => {
+		if (!answers[currentQuestionIndex]) {
+			alert("Сураныч суроого жооп бериңиз.")
+			return
+		}
+		goToNextQuestion()
+	}
 
 	const finishQuiz = async () => {
 		if (!answers[currentQuestionIndex]) {
@@ -176,6 +209,7 @@ const Questions = () => {
 		}
 	}
 
+	// If no questions are loaded
 	if (questions.length === 0) {
 		return (
 			<div className="flex justify-center items-center h-screen">
@@ -186,20 +220,30 @@ const Questions = () => {
 		)
 	}
 
+	// If quiz is finished
 	if (quizFinished) {
 		return (
 			<div className="flex flex-col items-center justify-center h-screen bg-blue-100">
 				<div className="bg-white p-8 rounded-lg shadow-lg text-center">
 					<h2 className="text-3xl font-bold text-blue-600 mb-4">Тест бүттү!</h2>
 					<p className="text-xl text-gray-700">
-						Сиздин жыйынтык жөнөтүлдү. Сиз жыйынтыкты кийинчерээк көрө аласыз .жыйтыкты коруу учун  жогорууда ушул баскычты басыныз <span className="" >☰</span>
-
+						Сиздин жыйынтык жөнөтүлдү. Сиз жыйынтыкты кийинчерээк көрө аласыз.{" "}
 					</p>
-					
-					<div className="mt-8">
+					<br />
+					<p className="text-xl text-gray-700">
+						Жыйынтыкты көрүү үчүн жогоруудагы баскычты басыныз{" "}
+						<span className="text-blue-500 ">☰</span>
+					</p>
+
+					<div className="mt-8 flex flex-col md:flex-row justify-center gap-5 ">
 						<Link to="/">
 							<button className="bg-blue-500 text-white px-6 py-2 rounded-full text-lg hover:bg-blue-600 transition duration-300">
 								Башкы бетке баруу
+							</button>
+						</Link>
+						<Link to="/results">
+							<button className="bg-blue-500 text-white px-6 py-2 rounded-full text-lg hover:bg-blue-600 transition duration-300">
+								Жоопторду көрүү
 							</button>
 						</Link>
 					</div>
@@ -208,6 +252,7 @@ const Questions = () => {
 		)
 	}
 
+	// Current question handling
 	const currentQuestion = questions[currentQuestionIndex]
 	if (!currentQuestion) {
 		return (
