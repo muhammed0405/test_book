@@ -77,14 +77,14 @@ const Register = () => {
 					label="Электрондук почта"
 					id="email"
 					type="email"
-					placeholder="Электрондук почтаңызды жазыңыз"
+					placeholder="мисалы: asanusonov@gmail.com"
 					register={register}
 				/>
 				<InputField
 					label="Логин"
 					id="username"
 					type="text"
-					placeholder="Колдонуучу атыңызды жазыңыз"
+					placeholder="мисалы: asanusonov"
 					register={register}
 				/>
 				<InputField
