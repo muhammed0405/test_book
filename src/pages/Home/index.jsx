@@ -48,7 +48,7 @@ export default function Home() {
   return (
     <div className="mx-auto p-6 bg-gray-100 rounded-lg shadow-md min-h-screen">
       <h1 className="text-3xl font-bold mb-4 text-center text-blue-700">
-        "Маркумдар үнү" аттуу китеп боюнча тест
+        Кыргыз тил жана Адабияты  боюнча тест
       </h1>
 
       {/* Аудиокитеп бөлүгү */}
