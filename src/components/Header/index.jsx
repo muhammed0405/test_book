@@ -23,6 +23,7 @@ export default function Header() {
 	const signOut = useSignOut()
 	const auth = useAuthUser()
 	const [menuOpen, setMenuOpen] = useState(false)
+	const [showStartButton, setShowStartButton] = useState(false); // Баштоо баскычын көрсөтүү үчүн жаңы state
 
 	const buttonStyle = {
 		borderColor: colors.primary,
@@ -120,6 +121,23 @@ export default function Header() {
 						</NavButton>
 					</motion.div>
 				))}
+				 {isAuthenticated && showStartButton && ( // Баштоо баскычын көрсөтүү
+                    <motion.div
+                        initial={{ opacity: 0, y: -20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: buttons.length * 0.1 }}
+                        style={{
+                            display: "flex",
+                            flexDirection: isMobile ? "column" : "row",
+                            alignItems: "center",
+                            gap: "0.5rem",
+                        }}
+                    >
+                        <NavButton to="/start" onClick={closeMenu} title="Баштоо">
+                            🚀 баштоо
+                        </NavButton>
+                    </motion.div>
+                )}
 				{isAuthenticated && (
 					<motion.div
 						initial={{ opacity: 0, y: -20 }}

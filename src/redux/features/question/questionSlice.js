@@ -129,18 +129,23 @@ export const getAccess = createAsyncThunk("questions/getAccess", async () => {
 
 export const toggleAccess = createAsyncThunk(
 	"questions/toggleAccess",
-	async isAccess => {
+	async ({ type, currentState, otherState }) => {
 		try {
 			const response = await axiosInstance.patch(
 				"/api/collections/isAdminGaveAcces/records/vwyp7szt8vbrw90",
 				{
-					isIt: !isAccess,
+					isIt: type === "results" ? !currentState : otherState,
+					isQuizStarted: type === "questions" ? !currentState : otherState,
 				}
 			)
 
-			return !isAccess
+			return {
+				isAccess: type === "results" ? !currentState : otherState,
+				isQuizStarted: type === "questions" ? !currentState : otherState,
+			}
 		} catch (error) {
 			console.error("Error toggling access:", error)
+			throw error
 		}
 	}
 )
@@ -152,6 +157,7 @@ export const initialState = {
 	results: [],
 	allResults: [],
 	isAccess: false,
+	isQuizStarted: false,
 	resultShowingTime: "",
 }
 const questionSlice = createSlice({
@@ -163,6 +169,7 @@ const questionSlice = createSlice({
 		results: [],
 		allResults: [],
 		isAccess: false,
+		isQuizStarted: false,
 		resultShowingTime: "",
 	},
 	reducers: {},
@@ -211,11 +218,13 @@ const questionSlice = createSlice({
 			.addCase(getAccess.fulfilled, (state, action) => {
 				state.loading = false
 				state.isAccess = action.payload.isIt
+				state.isQuizStarted = action.payload.isQuizStarted
 				state.resultShowingTime = action.payload.time
 			})
 			.addCase(toggleAccess.fulfilled, (state, action) => {
 				state.loading = false
-				state.isAccess = action.payload
+				state.isAccess = action.payload.isAccess
+				state.isQuizStarted = action.payload.isQuizStarted
 			})
 	},
 })

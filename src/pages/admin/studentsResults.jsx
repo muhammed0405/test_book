@@ -71,7 +71,7 @@ export const sortResultsByCorrectAnswersAndTime = items => {
 
 const StudentsResults = () => {
 	const dispatch = useDispatch()
-	const { allResults, loading, error, isAccess } = useSelector(
+	const { allResults, loading, error, isAccess, isQuizStarted } = useSelector(
 		state => state.questions
 	)
 	const [sortedResults, setSortedResults] = useState([])
@@ -100,11 +100,45 @@ const StudentsResults = () => {
 	}, [dispatch])
 
 	const handleToggleAccess = () => {
-		if (window.confirm(isAccess ? "Жыйынтыкты жашырууга макулсузбу?" : "Жыйынтыкты көрсөтүүгө макулсузбу?")) {
+		if (
+			window.confirm(
+				isAccess
+					? "Жыйынтыкты жашырууга макулсузбу?"
+					: "Жыйынтыкты көрсөтүүгө макулсузбу?"
+			)
+		) {
 			try {
-				dispatch(toggleAccess(isAccess))
+				dispatch(
+					toggleAccess({
+						type: "results",
+						currentState: isAccess,
+						otherState: isQuizStarted,
+					})
+				)
 			} catch (error) {
-				alert("Ката чыкты кайра аракет кылыңыз", error)
+				alert("Ката чыкты, кайра аракет кылыңыз: " + error)
+			}
+		}
+	}
+
+	const handleToggleUserQuestions = () => {
+		if (
+			window.confirm(
+				isQuizStarted
+					? "Суроолорду жашырууга макулсузбу?"
+					: "Суроолорду көрсөтүүгө макулсузбу?"
+			)
+		) {
+			try {
+				dispatch(
+					toggleAccess({
+						type: "questions",
+						currentState: isQuizStarted,
+						otherState: isAccess,
+					})
+				)
+			} catch (error) {
+				alert("Ката чыкты, кайра аракет кылыңыз: " + error)
 			}
 		}
 	}
@@ -154,13 +188,20 @@ const StudentsResults = () => {
 				>
 					{isAccess ? "🙈 жыйынтыкты жашыруу" : "👀 жыйынтыкты көрсөтү"}
 				</button>
+				<button
+					onClick={handleToggleUserQuestions} // Колдонуучуларга суроолорду жашыруу/көрсөтүү
+					className="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded"
+					title="Суроолорду жашыруу/көрсөтүү"
+				>
+					{isQuizStarted ? "🙈 суроолорду жашыруу" : "👀 суроолорду көрсөтүү"}
+				</button>
 			</div>
 			{sortedResults.length > 0 ? (
 				<ul className="space-y-4">
 					{sortedResults.map((studentResult, index) => (
 						<li
 							key={studentResult.student_id}
-							className="bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300"
+							className={`bg-white shadow-md rounded-lg p-6 hover:shadow-lg transition-shadow duration-300 							}`}
 						>
 							<div className="flex items-center justify-between mb-4">
 								<strong className="text-[14px] sm:text-lg md:text-xl text-gray-800 flex items-center gap-2">

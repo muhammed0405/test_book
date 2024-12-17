@@ -9,6 +9,7 @@ import { getQuestions } from "../redux/features/question/questionSlice"
 
 const Questions = () => {
 	const questions = useSelector(state => state.questions.questions)
+	const isQuizStarted = useSelector(state => state.questions.isQuizStarted)
 	const dispatch = useDispatch()
 	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
 	const [answers, setAnswers] = useState({})
@@ -17,6 +18,7 @@ const Questions = () => {
 	const [quizResults, setQuizResults] = useState(null)
 	const [questionStartTime, setQuestionStartTime] = useState(Date.now())
 	const [totalTimeSpent, setTotalTimeSpent] = useState(0)
+	const [isQuestionsVisible, setIsQuestionsVisible] = useState(true) // Суроолордун көрүнүп жатканын текшерүү үчүн state
 	const auth = useAuthUser()
 	const pb = new PocketBase("https://tasbih.pockethost.io")
 
@@ -68,17 +70,14 @@ const Questions = () => {
 		// Fetch user record
 		const fetchUserById = async () => {
 			try {
-				// Directly use getFirstListItem without assuming .items array
 				const user = await pb
 					.collection("results3")
 					.getFirstListItem(`student_id = "${auth.userId}"`)
 
-				// Check if user record exists
 				const isFinished = !!user
 				setQuizFinished(isFinished)
 				localStorage.setItem("quizFinished", JSON.stringify(isFinished))
 			} catch (error) {
-				// Handle 404 specifically
 				if (error.status === 404) {
 					setQuizFinished(false)
 					localStorage.setItem("quizFinished", JSON.stringify(false))
@@ -109,7 +108,6 @@ const Questions = () => {
 
 	const handleAutoNextQuestion = () => {
 		// Automatically move to next question when time runs out
-		// If no answer was given, treat it as a null/incorrect answer
 		if (!answers[currentQuestionIndex]) {
 			handleAnswer(null)
 		}
@@ -209,6 +207,18 @@ const Questions = () => {
 		}
 	}
 
+	if (!isQuizStarted) {
+		return (
+			<div>
+				<div className="flex items-center justify-center h-screen bg-gray-100">
+					<p className="text-xl text-center p-4 bg-white shadow rounded">
+						Тест баштала элек же бүткөн. Мугалим уруксат бергенде башталат .
+					</p>
+				</div>
+			</div>
+		)
+	}
+
 	// If no questions are loaded
 	if (questions.length === 0) {
 		return (
@@ -232,7 +242,7 @@ const Questions = () => {
 					<br />
 					<p className="text-xl text-gray-700">
 						Жыйынтыкты көрүү үчүн жогоруудагы баскычты басыныз{" "}
-						<span className="text-blue-500 ">☰</span>
+						<span className="text-blue-500">☰</span>
 					</p>
 
 					<div className="mt-8 flex flex-col md:flex-row justify-center gap-5 ">
