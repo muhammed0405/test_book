@@ -1,71 +1,71 @@
 /** @format */
 
-import { useEffect, useRef, useState } from "react"
-import { IoPerson } from "react-icons/io5"
-import { RxLapTimer } from "react-icons/rx"
-import { useDispatch, useSelector } from "react-redux"
+import { useEffect, useRef, useState } from "react";
+import { IoPerson } from "react-icons/io5";
+import { RxLapTimer } from "react-icons/rx";
+import { useDispatch, useSelector } from "react-redux";
 import {
-	getAccess,
-	getAllResults,
-	toggleAccess,
-} from "../../redux/features/question/questionSlice"
+    getAccess,
+    getAllResults,
+    toggleAccess,
+} from "../../redux/features/question/questionSlice";
 
 // Utility Functions
 
 export const groupResultsByStudent = items => {
-	return items.reduce((acc, item) => {
-		const result = item.oneStudentJsonResult.result
-		const studentId = item.student_id
+    return items.reduce((acc, item) => {
+        const result = item.oneStudentJsonResult.result;
+        const studentId = item.student_id;
 
-		if (!acc[studentId]) {
-			acc[studentId] = {
-				student_id: studentId,
-				correctAnswers: result.correctAnswers,
-				wrongAnswers: result.wrong_answers,
-				totalTime: result.total_time_spent,
-				results: item.oneStudentJsonResult.resultOfOneStudent,
-				student_name:
-					item.oneStudentJsonResult.resultOfOneStudent[0].student_name ||
-					"Unknown",
-			}
-		}
+        if (!acc[studentId]) {
+            acc[studentId] = {
+                student_id: studentId,
+                correctAnswers: result.correctAnswers,
+                wrongAnswers: result.wrong_answers,
+                totalTime: result.total_time_spent,
+                results: item.oneStudentJsonResult.resultOfOneStudent,
+                student_name:
+                    item.oneStudentJsonResult.resultOfOneStudent[0].student_name ||
+                    "Unknown",
+            };
+        }
 
-		return acc
-	}, {})
-}
+        return acc;
+    }, {});
+};
 
 export const formatTime = seconds => {
-	const minutes = Math.floor(seconds / 60)
-	const remainingSeconds = seconds % 60
-	return `${minutes}м ${remainingSeconds}с`
-}
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes}м ${remainingSeconds}с`;
+};
 
 export const sortStudentResults = (studentResults, sortBy) => {
-	return Object.values(studentResults).sort((a, b) => {
-		switch (sortBy) {
-			case "name":
-				return a.student_name.localeCompare(b.student_name)
-			case "time":
-				return a.totalTime - b.totalTime
-			case "correct":
-				return b.correctAnswers - a.correctAnswers
-			case "wrong":
-				return b.wrongAnswers - a.wrongAnswers
-			default:
-				return 0
-		}
-	})
-}
+    return Object.values(studentResults).sort((a, b) => {
+        switch (sortBy) {
+            case "name":
+                return a.student_name.localeCompare(b.student_name);
+            case "time":
+                return a.totalTime - b.totalTime;
+            case "correct":
+                return b.correctAnswers - a.correctAnswers;
+            case "wrong":
+                return b.wrongAnswers - a.wrongAnswers;
+            default:
+                return 0;
+        }
+    });
+};
 
 export const sortResultsByCorrectAnswersAndTime = items => {
-	const groupedResults = groupResultsByStudent(items)
-	return Object.values(groupedResults).sort((a, b) => {
-		if (b.correctAnswers !== a.correctAnswers) {
-			return b.correctAnswers - a.correctAnswers
-		}
-		return a.totalTime - b.totalTime
-	})
-}
+    const groupedResults = groupResultsByStudent(items);
+    return Object.values(groupedResults).sort((a, b) => {
+        if (b.correctAnswers !== a.correctAnswers) {
+            return b.correctAnswers - a.correctAnswers;
+        }
+        return a.totalTime - b.totalTime;
+    });
+};
 
 // React Component
 
@@ -77,27 +77,27 @@ const StudentsResults = () => {
 	const [sortedResults, setSortedResults] = useState([])
 	const [sortBy, setSortBy] = useState("name")
 
-	useEffect(() => {
-		if (allResults.items?.length > 0) {
-			const groupedResults = groupResultsByStudent(allResults.items)
-			const sorted = sortStudentResults(groupedResults, sortBy)
-			setSortedResults(sorted)
-		}
-	}, [allResults.items, sortBy])
+    useEffect(() => {
+        if (allResults.items?.length > 0) {
+            const groupedResults = groupResultsByStudent(allResults.items);
+            const sorted = sortStudentResults(groupedResults, sortBy);
+            setSortedResults(sorted);
+        }
+    }, [allResults.items, sortBy]);
 
-	const handleSort = criteria => {
-		setSortBy(criteria)
-	}
+    const handleSort = criteria => {
+        setSortBy(criteria);
+    };
 
-	const runOnce = useRef(false)
+    const runOnce = useRef(false);
 
-	useEffect(() => {
-		if (!runOnce.current) {
-			dispatch(getAllResults())
-			dispatch(getAccess())
-			runOnce.current = true
-		}
-	}, [dispatch])
+    useEffect(() => {
+        if (!runOnce.current) {
+            dispatch(getAllResults());
+            dispatch(getAccess());
+            runOnce.current = true;
+        }
+    }, [dispatch]);
 
 	const handleToggleAccess = () => {
 		if (
@@ -248,4 +248,4 @@ const StudentsResults = () => {
 	)
 }
 
-export default StudentsResults
+export default StudentsResults;
