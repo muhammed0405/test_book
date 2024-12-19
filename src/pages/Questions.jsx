@@ -8,18 +8,19 @@ import { Link } from "react-router-dom";
 import { getQuestions } from "../redux/features/question/questionSlice";
 
 const Questions = () => {
-    const questions = useSelector(state => state.questions.questions);
-    const dispatch = useDispatch();
-    const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-    const [answers, setAnswers] = useState({});
-    const [timeLeft, setTimeLeft] = useState(60);
-    const [quizFinished, setQuizFinished] = useState(false);
-    const [quizResults, setQuizResults] = useState(null);
-    const [questionStartTime, setQuestionStartTime] = useState(Date.now());
-    const [totalTimeSpent, setTotalTimeSpent] = useState(0);
-    const [isQuestionsVisible, setIsQuestionsVisible] = useState(true); // Суроолордун көрүнүп жатканын текшерүү үчүн state
-    const auth = useAuthUser();
-    const pb = new PocketBase("https://tasbih.pockethost.io");
+	const questions = useSelector(state => state.questions.questions)
+	const isQuizStarted = useSelector(state => state.questions.isQuizStarted)
+	const dispatch = useDispatch()
+	const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+	const [answers, setAnswers] = useState({})
+	const [timeLeft, setTimeLeft] = useState(60)
+	const [quizFinished, setQuizFinished] = useState(false)
+	const [quizResults, setQuizResults] = useState(null)
+	const [questionStartTime, setQuestionStartTime] = useState(Date.now())
+	const [totalTimeSpent, setTotalTimeSpent] = useState(0)
+	const [isQuestionsVisible, setIsQuestionsVisible] = useState(true) // Суроолордун көрүнүп жатканын текшерүү үчүн state
+	const auth = useAuthUser()
+	const pb = new PocketBase("https://tasbih.pockethost.io")
 
     useEffect(() => {
         const savedState = JSON.parse(localStorage.getItem("quizState"));
@@ -66,25 +67,25 @@ const Questions = () => {
         // Dispatch questions fetch
         const questionsPromise = dispatch(getQuestions());
 
-        // Fetch user record
-        const fetchUserById = async () => {
-            try {
-                const user = await pb
-                    .collection("results3")
-                    .getFirstListItem(`student_id = "${auth.userId}"`);
+		// Fetch user record
+		const fetchUserById = async () => {
+			try {
+				const user = await pb
+					.collection("results3")
+					.getFirstListItem(`student_id = "${auth.userId}"`)
 
-                const isFinished = !!user;
-                setQuizFinished(isFinished);
-                localStorage.setItem("quizFinished", JSON.stringify(isFinished));
-            } catch (error) {
-                if (error.status === 404) {
-                    setQuizFinished(false);
-                    localStorage.setItem("quizFinished", JSON.stringify(false));
-                } else {
-                    console.error("Error fetching user:", error);
-                }
-            }
-        };
+				const isFinished = !!user
+				setQuizFinished(isFinished)
+				localStorage.setItem("quizFinished", JSON.stringify(isFinished))
+			} catch (error) {
+				if (error.status === 404) {
+					setQuizFinished(false)
+					localStorage.setItem("quizFinished", JSON.stringify(false))
+				} else {
+					console.error("Error fetching user:", error)
+				}
+			}
+		}
 
         // Use Promise.all to handle both operations
         Promise.all([questionsPromise, fetchUserById()]);
@@ -105,13 +106,13 @@ const Questions = () => {
         setTotalTimeSpent(prevTotal => prevTotal + timeSpent);
     };
 
-    const handleAutoNextQuestion = () => {
-        // Automatically move to next question when time runs out
-        if (!answers[currentQuestionIndex]) {
-            handleAnswer(null);
-        }
-        goToNextQuestion();
-    };
+	const handleAutoNextQuestion = () => {
+		// Automatically move to next question when time runs out
+		if (!answers[currentQuestionIndex]) {
+			handleAnswer(null)
+		}
+		goToNextQuestion()
+	}
 
     const goToNextQuestion = () => {
         if (currentQuestionIndex < questions.length - 1) {
@@ -196,15 +197,27 @@ const Questions = () => {
             };
         });
 
-        return {
-            resultOfOneStudent,
-            result: {
-                correctAnswers,
-                wrong_answers: wrongAnswers,
-                total_time_spent: totalTimeSpent,
-            },
-        };
-    };
+		return {
+			resultOfOneStudent,
+			result: {
+				correctAnswers,
+				wrong_answers: wrongAnswers,
+				total_time_spent: totalTimeSpent,
+			},
+		}
+	}
+
+	if (!isQuizStarted) {
+		return (
+			<div>
+				<div className="flex items-center justify-center h-screen bg-gray-100">
+					<p className="text-xl text-center p-4 bg-white shadow rounded">
+						Тест баштала элек же бүткөн. Мугалим уруксат бергенде башталат .
+					</p>
+				</div>
+			</div>
+		)
+	}
 
     // If no questions are loaded
     if (questions.length === 0) {
@@ -217,20 +230,20 @@ const Questions = () => {
         );
     }
 
-    // If quiz is finished
-    if (quizFinished) {
-        return (
-            <div className="flex flex-col items-center justify-center h-screen bg-blue-100">
-                <div className="bg-white p-8 rounded-lg shadow-lg text-center">
-                    <h2 className="text-3xl font-bold text-blue-600 mb-4">Тест бүттү!</h2>
-                    <p className="text-xl text-gray-700">
-                        Сиздин жыйынтык жөнөтүлдү. Сиз жыйынтыкты кийинчерээк көрө аласыз.{ " " }
-                    </p>
-                    <br />
-                    <p className="text-xl text-gray-700">
-                        Жыйынтыкты көрүү үчүн жогоруудагы баскычты басыныз{" "}
-                        <span className="text-blue-500">☰</span>
-                    </p>
+	// If quiz is finished
+	if (quizFinished) {
+		return (
+			<div className="flex flex-col items-center justify-center h-screen bg-blue-100">
+				<div className="bg-white p-8 rounded-lg shadow-lg text-center">
+					<h2 className="text-3xl font-bold text-blue-600 mb-4">Тест бүттү!</h2>
+					<p className="text-xl text-gray-700">
+						Сиздин жыйынтык жөнөтүлдү. Сиз жыйынтыкты кийинчерээк көрө аласыз.{" "}
+					</p>
+					<br />
+					<p className="text-xl text-gray-700">
+						Жыйынтыкты көрүү үчүн жогоруудагы баскычты басыныз{" "}
+						<span className="text-blue-500">☰</span>
+					</p>
 
                     <div className="mt-8 flex flex-col md:flex-row justify-center gap-5 ">
                         <Link to="/">
