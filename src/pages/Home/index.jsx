@@ -1,7 +1,7 @@
-import { useState } from "react";
-import { FaYoutube } from "react-icons/fa";
+// import { useState } from "react";
+// import { FaYoutube } from "react-icons/fa";
 export default function Home() {
-  const [showVideo, setShowVideo] = useState(false);
+  // const [showVideo, setShowVideo] = useState(false);
   // const [currentVideo, setCurrentVideo] = useState(0);
 
   // const videos = [
