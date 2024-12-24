@@ -159,11 +159,11 @@ export default function Home() {
 			<div className="bg-white p-4 rounded-md mb-6">
 				<p className="mb-2">
 					Саламатсызбы окуучу,{" "}
-					<span className="font-semibold">27-декабрга саат 13:00</span> Китеп
-					боюнча экзамен болот.
+					<span className="font-semibold">25-декабрга саат 13:00</span>   Кыргыз тил жана Адабияты  боюнча тест
+					 болот.
 				</p>
 				<p className="mb-2">
-					Экзаменге катышуу үчүн{" "}
+          Тест катышуу үчүн{" "}
 					<span className="font-semibold text-red-600">25-декабрга чейин</span>{" "}
 					ушул сайтка катталышыңыз керек.
 				</p>
