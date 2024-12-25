@@ -58,7 +58,7 @@ export default function Home() {
 			<div className="bg-white p-4 rounded-md mb-6">
 				<p className="mb-2">
 					Саламатсызбы окуучу,{" "}
-					<span className="font-semibold">25-декабрга саат 13:00</span>   Кыргыз тил жана Адабияты  боюнча тест
+					<span className="font-semibold">25-декабрда бололот</span>   Кыргыз тил жана Адабияты  боюнча тест
 					 болот.
 				</p>
 				<p className="mb-2">
@@ -76,10 +76,7 @@ export default function Home() {
 				Тест кандай түрдө болот:
 			</h2>
 			<ul className="list-disc pl-6 mb-6 space-y-2">
-				<li>
-					Саат 13:00 дө баардык окуучу тестти баштоо керек. Кечиксе кайра
-					тапшырганга болбойт.
-				</li>
+			
 				<li>
 					Бир суроого бир мүнөт убакыт берилет. Жооп бере албай калсаңыз, жооп
 					туура эмес болуп саналат.
